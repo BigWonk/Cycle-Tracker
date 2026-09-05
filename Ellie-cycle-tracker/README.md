@@ -1,12 +1,5 @@
-# 🌸 Bloom — Menstrual Cycle Tracker
 
-Bloom is a full-stack menstrual cycle tracking web application designed to help users record, understand, and manage their menstrual cycles in a simple, private, and aesthetically pleasing environment.
 
-Users can create an account, track their cycle dates, record flow and symptoms, add personal notes, manage their profile, and connect with others through Bloom Circles.
-
----
-
-## ✨ Features
 
 ### 🌷 Menstrual Cycle Tracking
 
@@ -27,19 +20,8 @@ Users can create an account, track their cycle dates, record flow and symptoms, 
 - Average cycle length tracking
 - Average period length tracking
 
-### 💕 Bloom Circles
-
-Bloom includes a circle-based feature that allows users to connect with other users.
-
-- Create a private circle
-- Generate a unique circle code
-- Join/follow an existing circle
-- Store circle ownership information
-- Track circle followers
 
 ### 🔐 Security
-
-Bloom is designed with privacy and security in mind.
 
 - Passwords are securely hashed
 - JWT is used for authentication
@@ -83,32 +65,4 @@ Bloom is designed with privacy and security in mind.
 
 ---
 
-## 🏗️ Application Architecture
 
-```text
-                    🌸 BLOOM
-                       │
-                       ▼
-                Frontend Interface
-                       │
-                       ▼
-                Express.js API
-                       │
-             ┌─────────┴─────────┐
-             │                   │
-             ▼                   ▼
-       Authentication       Application APIs
-             │                   │
-             └─────────┬─────────┘
-                       │
-                       ▼
-              PostgreSQL Database
-                  via Supabase
-                       │
-        ┌──────────────┼──────────────┐
-        │              │              │
-        ▼              ▼              ▼
-      users      cycle_entries     circles
-                                      │
-                                      ▼
-                              circle_followers
