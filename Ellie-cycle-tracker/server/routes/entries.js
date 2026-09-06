@@ -30,8 +30,8 @@ router.put('/:date', requireAuth, async (req, res) => {
   const { date } = req.params;
   if (!DATE_RE.test(date)) return res.status(400).json({ error: 'date must be YYYY-MM-DD.' });
   const { flow, symptoms, note } = req.body || {};
-  if (flow !== null && flow !== undefined && !['light', 'medium', 'heavy'].includes(flow)) {
-    return res.status(400).json({ error: 'flow must be light, medium, heavy, or null.' });
+  if (flow !== null && flow !== undefined && !['light', 'medium', 'heavy', 'dying', 'gore-dolu'].includes(flow)) {
+    return res.status(400).json({ error: 'flow must be light, medium, heavy, dying, gore-dolu or null.' });
   }
   const entry = {
     flow: flow || null,

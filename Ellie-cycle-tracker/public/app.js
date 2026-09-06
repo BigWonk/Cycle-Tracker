@@ -21,26 +21,26 @@
     menstrual: [
       {ico:'💤', t:'Sleeping', s:'Vuzmojno e da se namali serotonina v mozuka, koito kontrolira nastroenieto i spaneto(tuiche ne e dobra ideq da sedish do 3 vecherta).'},
       {ico:'🚶‍♀️', t:'No natovarvane', s:'Ne e mnogo hubavo da se natovarvash vuv fitnesa zaradi hormonite(tuiche ne probvai 40 kila na lejanka pls).'},
-      {ico:'🥬', t:'Jelqzo-rich foods', s:'Qj neshta s poveche jelqzo, zashtoto mnogo jelqzo se gubi(i ne govorq za jelqzo ot minecraft).'},
+      {ico:'🥬', t:'Jelqzo-rich foods', s:'Qj neshta s poveche jelqzo(spanak, pileshko, riba ton i drugi), zashtoto gubish mnogo kruv.'},
       {ico:'😰', t:'Hormoni', s:'Estrogena i progesterona sa super niski v momenta, koeto te kara da si malko... cranky.'}
     ],
     follicular: [
-      {ico:'🏃‍♀️', t:'Good time da trenirash', s:'Uvelichila ti se e mnogo energiqta tuiche probvai da se napuvash vuv fitnesa.'},
-      {ico:'🧠', t:'Sharper mozuk', s:'Estrogena ti e visok, tuiche mojesh da se fokusirash mnogo po-dobre.'},
-      {ico:'🥗', t:'Qdene', s:'Qj kvoto te kefi i si nabavqi malko poveche protein(trqbda da hitvash golla).'},
-      {ico:'🌱', t:'Start neshto da pravish', s:'Motivaciqta ti e dosta visoka, tuiche mojesh da nauchish neshto na kitarata primerno.'}
+      {ico:'🏃‍♀️', t:'Good time da trenirash', s:'Uvelichila ti se e mnogo energiqta tuiche probvai da ne skipvash uprajneniq vuv fitnesa.'},
+      {ico:'🧠', t:'Sharper mozuk', s:'Estrogena ti e visok, tuiche mojesh da se fokusirash mnogo po-dobre(i da ne me pitash kakvo shte nosish za fitnes).'},
+      {ico:'🥗', t:'Foody', s:'Qj kvoto te kefi i si nabavqi malko poveche protein(trqbda da hitvash golla).'},
+      {ico:'🎸', t:'Start neshto da pravish', s:'Motivaciqta ti e dosta visoka, tuiche mojesh da nauchish neshto na kitarata(znam che ppc ne q pipash).'}
     ],
     ovulation: [
       {ico:'✨', t:'Peak energy', s:'Okay VECHE moje da probvash da izbutash 40 ot lejankata(believe in urself abebq).'},
-      {ico:'💧', t:'Stay hydrated', s:'Shte ti se pie baq voda zatova se vuzpolzvai.'},
-      {ico:'🗣️', t:'Confidence is high', s:'A good time da mi kazvash che sum laino po 30 puti na den.'},
+      {ico:'💧', t:'Stay hydrated', s:'Shte ti se pie baq voda zatova si q nabavqi(i ne pii mnogo redbulli).'},
+      {ico:'🗣️', t:'Samochustvieto is high', s:'A good time da mi kazvash che sum laino po 30 puti na den.'},
       {ico:'🕷️', t:'Super sili', s:'Zaradi uvelichenieto v testosterona i estrogena mojesh da poluchish sharper senses(omg spidey sense).'}
     ],
     luteal: [
       {ico:'🍫', t:'Balance cravings', s:'Sega shte ti se qde baq sladko tuiche probvai da qdesh nqkvi neshta s magnesii(primerno dark chocolate).'},
-      {ico:'🛁', t:'Po-rano lqgai', s:'PMS symptoms se podobrqvat ako si lqgash rano(tuiche ne doom scrolvai).'},
-      {ico:'🌯', t:'Calorie burn', s:'Zaradi hormonite ti, v momenta gubish po okolo 250-350 bonus calorii(zatova iskash da qdesh ig?).'},
-      {ico:'🕯️', t:'Chillaxxx', s:'Energiqta ti stava vse po-zle i po-zle, tuiche ne se natovarvai.'}
+      {ico:'🛁', t:'Po-rano lqgai', s:'PMS symptomite se podobrqvat ako si lqgash rano(tuiche ne doom scrolvai).'},
+      {ico:'🌯', t:'Calorie burn', s:'Zaradi hormonite ti, v momenta gubish po okolo 250-350 bonus calorii(zatova iskash da pravish hapvanki).'},
+      {ico:'🕯️', t:'Chillaxxx', s:'Energiqta ti stava vse po-zle i po-zle, tuiche ne se natovarvai tolkova.'}
     ]
   };
 
@@ -123,7 +123,7 @@
   }
 
   function flowerSvg(phase) {
-    const addresses = { menstrual: './CatImages/IMG_20260824_225755_627.jpg', follicular: './CatImages/IMG_20260824_225808_734.jpg', ovulation: './CatImages/IMG_20260824_225800_214.jpg', luteal: './CatImages/IMG_20260824_225753_594.jpg' };
+    const addresses = { menstrual: './CatImages/IMG_20260824_225753_594.jpg', follicular: './CatImages/IMG_20260824_225757_712.jpg', ovulation: './CatImages/IMG_20260824_225800_214.jpg', luteal: './CatImages/IMG_20260824_225755_627.jpg' };
     const c = addresses[phase] || '#e5a3bd';
     const petals = phase === 'menstrual' ? 3 : phase === 'follicular' ? 5 : phase === 'ovulation' ? 7 : 5;
     let petalEls = '';
@@ -245,7 +245,7 @@
           <h3 style="margin-top:6px;">Log today</h3>
           <div class="muted" style="margin-top:4px;">Flow</div>
           <div class="flow-row" id="flow-row">
-            ${['none','light','medium','heavy'].map(f => `<div class="flow-opt ${(dayEntry.flow||'none')===f?'on':''}" data-flow="${f}">${f[0].toUpperCase()+f.slice(1)}</div>`).join('')}
+            ${['none','light','gore-dolu','dying'].map(f => `<div class="flow-opt ${(dayEntry.flow||'none')===f?'on':''}" data-flow="${f}">${f[0].toUpperCase()+f.slice(1)}</div>`).join('')}
           </div>
           <div class="muted" style="margin-top:14px;">Symptoms</div>
           <div class="chip-group" id="symptom-chips">
@@ -435,7 +435,7 @@
         <div class="eyebrow">Edit day</div>
         <h3 style="margin-top:4px;">${niceDateLong(dateStr)}</h3>
         <div class="muted" style="margin-top:12px;">Flow</div>
-        <div class="flow-row" id="ed-flow">${['none','light','medium','heavy'].map(f => `<div class="flow-opt ${(entry.flow||'none')===f?'on':''}" data-flow="${f}">${f[0].toUpperCase()+f.slice(1)}</div>`).join('')}</div>
+        <div class="flow-row" id="ed-flow">${['none','light','gore-dolu','dying'].map(f => `<div class="flow-opt ${(entry.flow||'none')===f?'on':''}" data-flow="${f}">${f[0].toUpperCase()+f.slice(1)}</div>`).join('')}</div>
         <div class="muted" style="margin-top:14px;">Symptoms</div>
         <div class="chip-group" id="ed-symptoms">${SYMPTOM_OPTS.map(s => `<div class="chip ${entry.symptoms && entry.symptoms.includes(s) ? 'on' : ''}" data-symptom="${s}">${s}</div>`).join('')}</div>
         <div class="muted" style="margin-top:14px;">Notes</div>

@@ -9,19 +9,34 @@
 // and should not be relied on for contraception or fertility decisions —
 // the README and UI both say this explicitly.
 
+function parseIsoDate(dateStr) {
+  const [year, month, day] = (dateStr || '').split('-').map(Number);
+  if (!year || !month || !day) return null;
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
 function daysBetween(a, b) {
-  return Math.round((new Date(b) - new Date(a)) / 86400000);
+  const first = parseIsoDate(a);
+  const second = parseIsoDate(b);
+  if (!first || !second) return 0;
+  return Math.round((second.getTime() - first.getTime()) / 86400000);
 }
 
 function addDays(dateStr, n) {
-  const d = new Date(dateStr + 'T00:00:00');
-  d.setDate(d.getDate() + n);
+  const d = parseIsoDate(dateStr);
+  if (!d) return null;
+  d.setUTCDate(d.getUTCDate() + n);
   return d.toISOString().slice(0, 10);
+}
+
+function hasPeriodFlow(entry) {
+  const flow = entry && entry.flow;
+  return flow !== null && flow !== undefined && flow !== false && flow !== 'none' && flow !== '';
 }
 
 function periodStarts(entries) {
   const flowDates = Object.keys(entries)
-    .filter(d => entries[d] && entries[d].flow)
+    .filter(d => hasPeriodFlow(entries[d]))
     .sort();
   const starts = [];
   let prev = null;
@@ -42,7 +57,7 @@ function computeStats(entries, profile, today = new Date().toISOString().slice(0
     ? Math.round(cycleLengths.reduce((a, b) => a + b, 0) / cycleLengths.length)
     : (profile.avgCycleLength || 28);
 
-  const flowDates = Object.keys(entries).filter(d => entries[d] && entries[d].flow).sort();
+  const flowDates = Object.keys(entries).filter(d => hasPeriodFlow(entries[d])).sort();
   let runs = [], cur = 0, prev = null;
   for (const d of flowDates) {
     if (prev && daysBetween(prev, d) === 1) cur++;
@@ -59,7 +74,7 @@ function computeStats(entries, profile, today = new Date().toISOString().slice(0
 
   let dayInCycle = null, phase = null;
   if (lastStart) {
-    const diff = daysBetween(lastStart, today);
+    const diff = Math.max(0, daysBetween(lastStart, today));
     dayInCycle = ((diff % avgCycle) + avgCycle) % avgCycle + 1;
     if (dayInCycle <= avgPeriod) phase = 'menstrual';
     else if (dayInCycle <= Math.round(avgCycle / 2) - 1) phase = 'follicular';

@@ -1,12 +1,12 @@
 const pool = require('./postgres');
 
 function normalizeFlowForDb(flow) {
-  if (flow === null || flow === undefined || flow === false || flow === '') return null;
-  return ['light', 'medium', 'heavy'].includes(flow) ? true : null;
+  if (flow === null || flow === undefined || flow === false || flow === '' || flow === 'none') return null;
+  return ['light', 'medium', 'heavy', 'gore-dolu', 'dying'].includes(flow) ? true : null;
 }
 
 function normalizeFlowFromDb(flow) {
-  if (typeof flow === 'string' && ['light', 'medium', 'heavy'].includes(flow)) return flow;
+  if (typeof flow === 'string' && ['light', 'medium', 'heavy', 'gore-dolu', 'dying'].includes(flow)) return flow;
   if (flow === true) return 'light';
   if (flow === false) return null;
   return null;
@@ -79,8 +79,8 @@ async function createUser(user) {
       `INSERT INTO users
        (id, name, email, password_hash,
         avg_cycle_length, avg_period_length,
-        circle_code, created_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        last_period_start, circle_code, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [
         user.id,
         user.name,
@@ -88,6 +88,7 @@ async function createUser(user) {
         user.passwordHash,
         user.avgCycleLength || null,
         user.avgPeriodLength || null,
+        user.lastPeriodStart || null,
         user.circleCode,
         user.createdAt || new Date()
       ]
@@ -118,6 +119,7 @@ async function updateUser(id, patch) {
     name: 'name',
     avgCycleLength: 'avg_cycle_length',
     avgPeriodLength: 'avg_period_length',
+    lastPeriodStart: 'last_period_start',
     circleCode: 'circle_code'
   };
 
