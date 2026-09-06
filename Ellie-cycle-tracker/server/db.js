@@ -1,5 +1,17 @@
 const pool = require('./postgres');
 
+function dateStringFromValue(value) {
+  if (!value) return '';
+  if (typeof value === 'string') return value.slice(0, 10);
+  if (value instanceof Date) {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  return String(value).slice(0, 10);
+}
+
 function normalizeFlowForDb(flow) {
   if (flow === null || flow === undefined || flow === false || flow === '' || flow === 'none') return null;
   return ['light', 'medium', 'heavy', 'gore-dolu', 'dying'].includes(flow) ? true : null;
@@ -79,8 +91,8 @@ async function createUser(user) {
       `INSERT INTO users
        (id, name, email, password_hash,
         avg_cycle_length, avg_period_length,
-        last_period_start, circle_code, created_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+         circle_code, created_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [
         user.id,
         user.name,
@@ -88,11 +100,25 @@ async function createUser(user) {
         user.passwordHash,
         user.avgCycleLength || null,
         user.avgPeriodLength || null,
-        user.lastPeriodStart || null,
         user.circleCode,
         user.createdAt || new Date()
       ]
     );
+
+    if (user.lastPeriodStart) {
+      await client.query(
+        `INSERT INTO cycle_entries
+         (user_id, entry_date, flow, symptoms, note_enc)
+         VALUES ($1, $2, $3, $4, $5)
+         ON CONFLICT (user_id, entry_date)
+         DO UPDATE SET flow = EXCLUDED.flow,
+                       symptoms = EXCLUDED.symptoms,
+                       note_enc = EXCLUDED.note_enc,
+                       updated_at = NOW()`,
+        [user.id, user.lastPeriodStart, true, JSON.stringify([]), null]
+      );
+    }
+
 
     if (user.circleCode) {
       await client.query(
@@ -171,10 +197,7 @@ async function getEntries(userId) {
   const entries = {};
 
   for (const row of result.rows) {
-    const date =
-      row.entry_date instanceof Date
-        ? row.entry_date.toISOString().slice(0, 10)
-        : String(row.entry_date).slice(0, 10);
+    const date = dateStringFromValue(row.entry_date);
 
     entries[date] = {
       flow: normalizeFlowFromDb(row.flow),

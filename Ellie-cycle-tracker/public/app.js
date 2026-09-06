@@ -26,7 +26,7 @@
     ],
     follicular: [
       {ico:'🏃‍♀️', t:'Good time da trenirash', s:'Uvelichila ti se e mnogo energiqta tuiche probvai da ne skipvash uprajneniq vuv fitnesa.'},
-      {ico:'🧠', t:'Sharper mozuk', s:'Estrogena ti e visok, tuiche mojesh da se fokusirash mnogo po-dobre(i da ne me pitash kakvo shte nosish za fitnes).'},
+      {ico:'🧠', t:'Sharper mozuk', s:'Estrogena ti e visok, tuiche mojesh da se fokusirash mnogo po-dobre(the kakvo shte nosish incident).'},
       {ico:'🥗', t:'Foody', s:'Qj kvoto te kefi i si nabavqi malko poveche protein(trqbda da hitvash golla).'},
       {ico:'🎸', t:'Start neshto da pravish', s:'Motivaciqta ti e dosta visoka, tuiche mojesh da nauchish neshto na kitarata(znam che ppc ne q pipash).'}
     ],
