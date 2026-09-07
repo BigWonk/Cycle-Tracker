@@ -74,7 +74,7 @@ function computeStats(entries, profile, today = new Date().toISOString().slice(0
     ? Math.round(runs.reduce((a, b) => a + b, 0) / runs.length)
     : (profile.avgPeriodLength || 5);
 
-  const candidateLastStart = starts[0] || profile.lastPeriodStart || null;
+  const candidateLastStart = starts[starts.length - 1] || profile.lastPeriodStart || null;
   const lastStart = candidateLastStart && candidateLastStart <= today ? candidateLastStart : null;
   const predictedNext = lastStart ? addDays(lastStart, avgCycle) : null;
 
