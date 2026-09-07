@@ -34,9 +34,9 @@ function hasPeriodFlow(entry) {
   return flow !== null && flow !== undefined && flow !== false && flow !== 'none' && flow !== '';
 }
 
-function periodStarts(entries) {
+function periodStarts(entries, today = new Date().toISOString().slice(0, 10)) {
   const flowDates = Object.keys(entries)
-    .filter(d => hasPeriodFlow(entries[d]))
+    .filter(d => hasPeriodFlow(entries[d]) && d <= today)
     .sort();
   const starts = [];
   let prev = null;
@@ -48,16 +48,21 @@ function periodStarts(entries) {
 }
 
 function computeStats(entries, profile, today = new Date().toISOString().slice(0, 10)) {
-  const starts = periodStarts(entries);
+  const starts = periodStarts(entries, today);
 
   let cycleLengths = [];
-  for (let i = 1; i < starts.length; i++) cycleLengths.push(daysBetween(starts[i - 1], starts[i]));
+  for (let i = 1; i < starts.length; i++) {
+    const gap = daysBetween(starts[i - 1], starts[i]);
+    if (gap >= 21 && gap <= 45) cycleLengths.push(gap);
+  }
   cycleLengths = cycleLengths.slice(-6); // recent cycles weigh more
   const avgCycle = cycleLengths.length
     ? Math.round(cycleLengths.reduce((a, b) => a + b, 0) / cycleLengths.length)
     : (profile.avgCycleLength || 28);
 
-  const flowDates = Object.keys(entries).filter(d => hasPeriodFlow(entries[d])).sort();
+  const flowDates = Object.keys(entries)
+    .filter(d => hasPeriodFlow(entries[d]) && d <= today)
+    .sort();
   let runs = [], cur = 0, prev = null;
   for (const d of flowDates) {
     if (prev && daysBetween(prev, d) === 1) cur++;
@@ -69,7 +74,8 @@ function computeStats(entries, profile, today = new Date().toISOString().slice(0
     ? Math.round(runs.reduce((a, b) => a + b, 0) / runs.length)
     : (profile.avgPeriodLength || 5);
 
-  const lastStart = starts[starts.length - 1] || profile.lastPeriodStart || null;
+  const candidateLastStart = starts[0] || profile.lastPeriodStart || null;
+  const lastStart = candidateLastStart && candidateLastStart <= today ? candidateLastStart : null;
   const predictedNext = lastStart ? addDays(lastStart, avgCycle) : null;
 
   let dayInCycle = null, phase = null;
@@ -84,7 +90,7 @@ function computeStats(entries, profile, today = new Date().toISOString().slice(0
 
   let ovulationDate = null, fertileStart = null, fertileEnd = null;
   if (predictedNext) {
-    ovulationDate = addDays(predictedNext, -14);
+    ovulationDate = addDays(lastStart, avgCycle - 14);
     fertileStart = addDays(ovulationDate, -5);
     fertileEnd = addDays(ovulationDate, 1);
   }

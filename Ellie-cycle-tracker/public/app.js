@@ -51,6 +51,9 @@
   }
   function parseDate(s){ const [y,m,dd]=s.split('-').map(Number); return new Date(y,m-1,dd); }
   function addDays(dateStr,n){ const d=parseDate(dateStr); d.setDate(d.getDate()+n); return fmt(d); }
+  function isEditableDate(dateStr) {
+    return !dateStr || dateStr <= todayStr();
+  }
   function niceDate(s){ return s ? parseDate(s).toLocaleDateString(undefined,{month:'short',day:'numeric'}) : ''; }
   function niceDateLong(s){ return s ? parseDate(s).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'}): ''; }
   function phaseName(p){ return {menstrual:'Menstrual phase', follicular:'Follicular phase', ovulation:'Ovulation window', luteal:'Luteal phase'}[p] || 'Getting to know your cycle'; }
@@ -423,10 +426,22 @@
   function attachCalendar() {
     document.getElementById('cal-prev').onclick = () => { state.calMonth--; if (state.calMonth < 0) { state.calMonth = 11; state.calYear--; } render(); };
     document.getElementById('cal-next').onclick = () => { state.calMonth++; if (state.calMonth > 11) { state.calMonth = 0; state.calYear++; } render(); };
-    document.querySelectorAll('.cal-day[data-date]').forEach(el => { el.onclick = () => openDayEditor(el.dataset.date); });
+    document.querySelectorAll('.cal-day[data-date]').forEach(el => {
+      const dateStr = el.dataset.date;
+      if (!isEditableDate(dateStr)) {
+        el.classList.add('locked');
+        el.style.opacity = '0.55';
+        el.style.cursor = 'not-allowed';
+        return;
+      }
+      el.onclick = () => openDayEditor(dateStr);
+    });
   }
 
   function openDayEditor(dateStr) {
+    if (!isEditableDate(dateStr)) {
+      return;
+    }
     const entry = state.entries[dateStr] || { flow: null, symptoms: [], note: '' };
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
