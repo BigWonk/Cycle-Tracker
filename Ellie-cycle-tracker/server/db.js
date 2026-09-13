@@ -42,7 +42,7 @@ function normalizeSymptomsFromDb(symptoms) {
   return [];
 }
 
-// ---------------- USERS ----------------
+
 
 function normalizeUserFromDb(user) {
   if (!user) return null;
@@ -179,7 +179,7 @@ async function updateUser(id, patch) {
 }
 
 
-// ---------------- CYCLE ENTRIES ----------------
+
 
 async function getEntries(userId) {
   const result = await pool.query(
@@ -240,7 +240,7 @@ async function upsertEntry(userId, dateStr, entry) {
 }
 
 
-// ---------------- CIRCLES ----------------
+
 
 async function ownerOfCircleCode(code) {
   const result = await pool.query(

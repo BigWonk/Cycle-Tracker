@@ -1,13 +1,4 @@
-// server/crypto.js
-//
-// Field-level encryption for sensitive free-text (notes). Passwords are
-// never handled here — those are one-way hashed with bcrypt in auth.js,
-// which is the correct approach for credentials. This module is for data
-// that the app needs to read back later, such as journal notes, so it uses
-// AES-256-GCM (authenticated encryption) with a server-held key.
-//
-// The key comes from the ENCRYPTION_KEY environment variable and must be a
-// 32-byte value, base64 or hex encoded. See .env.example.
+
 
 const crypto = require('crypto');
 

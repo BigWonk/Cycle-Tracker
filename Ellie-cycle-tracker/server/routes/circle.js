@@ -5,8 +5,7 @@ const { computeStats } = require('../predict');
 
 const router = express.Router();
 
-// POST /api/circle/follow  { code }
-// Lets the current user follow someone else's shared overview by code.
+
 router.post('/follow', requireAuth, async (req, res) => {
   const code = String(req.body?.code || '').trim().toUpperCase();
   if (!code) return res.status(400).json({ error: 'code is required.' });
@@ -17,8 +16,7 @@ router.post('/follow', requireAuth, async (req, res) => {
   res.json({ ok: true });
 });
 
-// GET /api/circle -> everyone the current user follows, with their
-// current phase / predicted next period only (never notes or symptoms).
+
 router.get('/', requireAuth, async (req, res) => {
   const codes = await db.getFollowedCodes(req.userId);
   const results = await Promise.all(codes.map(async (code) => {

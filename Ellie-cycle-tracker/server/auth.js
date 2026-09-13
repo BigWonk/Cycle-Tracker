@@ -1,4 +1,4 @@
-// server/auth.js
+
 const jwt = require('jsonwebtoken');
 
 function getSecret() {

@@ -1,13 +1,4 @@
-// server/predict.js
-//
-// Turns a user's logged flow days into: period-start dates, average cycle
-// length, average period length, the current phase, and predictions for
-// the next period, ovulation day, and fertile window.
-//
-// This is a straightforward historical-average model, the same approach
-// used by most consumer cycle-tracking apps. It is not a medical device
-// and should not be relied on for contraception or fertility decisions —
-// the README and UI both say this explicitly.
+
 
 function parseIsoDate(dateStr) {
   const [year, month, day] = (dateStr || '').split('-').map(Number);

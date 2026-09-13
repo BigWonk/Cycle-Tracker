@@ -7,7 +7,7 @@
     stats: {},
     companions: [],
     following: [],
-    authMode: 'login', // 'login' | 'register'
+    authMode: 'login', 
     authError: '',
     view: 'home',
     calMonth: new Date().getMonth(),
@@ -58,7 +58,7 @@
   function niceDateLong(s){ return s ? parseDate(s).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'}): ''; }
   function phaseName(p){ return {menstrual:'Menstrual phase', follicular:'Follicular phase', ovulation:'Ovulation window', luteal:'Luteal phase'}[p] || 'Getting to know your cycle'; }
 
-  // ---------------- API helper ----------------
+  
   async function api(path, opts = {}) {
     const headers = Object.assign({ 'Content-Type': 'application/json' }, opts.headers || {});
     if (state.token) headers['Authorization'] = 'Bearer ' + state.token;
@@ -80,7 +80,7 @@
     render();
   }
 
-  // ---------------- data loading ----------------
+  
   async function loadAll() {
     if (!state.token) { state.loaded = true; render(); return; }
     try {
@@ -112,7 +112,7 @@
     state.following = followingRes.following;
   }
 
-  // ---------------- render root ----------------
+  
   function render() {
     const app = document.getElementById('app');
     if (!state.loaded) { app.innerHTML = `<div style="text-align:center;padding:80px 20px;color:#c96f95;font-family:'Fraunces',serif;">✿ loading bloom…</div>`; return; }
@@ -138,7 +138,7 @@
     return `<img src="${addresses[phase]}" alt="${phase}" width="${180}" height="${180}" style="display:block; border-radius:50%; object-fit:cover;" />`;
   }
 
-  // ---------------- auth screens ----------------
+  
   function authHtml() {
     const isLogin = state.authMode === 'login';
     return `
@@ -204,7 +204,7 @@
     };
   }
 
-  // ---------------- main shell ----------------
+ 
   function shellHtml() {
     const initials = (state.user.name || '?').slice(0, 1).toUpperCase();
     return `
@@ -330,55 +330,9 @@
     </div>`;
   }
 
-  function circleHtml() {
-    const code = state.user.circleCode;
-    return `
-    <div class="grid-2">
-      <div class="card">
-        <div class="eyebrow">Your circle</div>
-        <h3 style="margin-top:6px;">Partners & children</h3>
-        <p class="muted" style="margin-top:6px;">Keep a personal note of who you're tracking alongside — this list is just for you.</p>
-        <div id="people-list">
-          ${state.companions.length ? state.companions.map((p, idx) => `
-            <div class="person-row">
-              <div class="person-avatar">${p.name.slice(0,1).toUpperCase()}</div>
-              <div class="person-meta" style="flex:1;"><b>${p.name}</b><span>${p.relation}</span></div>
-              <button class="btn btn-ghost btn-sm" data-remove="${idx}">Remove</button>
-            </div>`).join('') : `<div class="empty-state">No one added yet.</div>`}
-        </div>
-        <div class="section-gap">
-          <div class="row-2">
-            <div class="field"><label>Name</label><input id="p-name" placeholder="e.g. Alex" /></div>
-            <div class="field"><label>Relation</label><input id="p-relation" placeholder="Partner / Child / Friend" /></div>
-          </div>
-          <button class="btn btn-soft" id="p-add">Add person</button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="eyebrow">Share your overview</div>
-        <h3 style="margin-top:6px;">Your invite code</h3>
-        <p class="muted" style="margin-top:6px;">Share this code so a partner can follow your current phase and predicted dates from their own bloom account. It never reveals symptoms or notes.</p>
-        <div class="code-box"><div class="code">${code}</div></div>
-        <div class="section-gap" style="border-top:1px solid var(--line);padding-top:16px;">
-          <h3>Follow someone else</h3>
-          <p class="muted" style="margin-top:6px;">Enter a code someone shared with you to see their current phase.</p>
-          <div class="row-2">
-            <div class="field" style="flex:2;"><input id="join-code" placeholder="ABC123" /></div>
-            <button class="btn btn-soft" id="join-btn" style="flex:1;">Follow</button>
-          </div>
-          <div id="joined-list">
-            ${state.following.length ? state.following.map(f => `
-              <div class="person-row">
-                <div class="person-avatar">${(f.name || '?').slice(0,1).toUpperCase()}</div>
-                <div class="person-meta"><b>${f.name}</b><span>${f.phase ? phaseName(f.phase) + ' · day ' + f.dayInCycle : 'No data yet'}${f.predictedNext ? ' · next period ' + niceDate(f.predictedNext) : ''}</span></div>
-              </div>`).join('') : `<div class="empty-state">Not following anyone yet.</div>`}
-          </div>
-        </div>
-      </div>
-    </div>`;
-  }
+  
 
-  // ---------------- interactions ----------------
+ 
   function attachShell() {
     document.getElementById('logout-chip').onclick = logout;
     document.querySelectorAll('[data-tab]').forEach(b => { b.onclick = () => { state.view = b.dataset.tab; render(); }; });

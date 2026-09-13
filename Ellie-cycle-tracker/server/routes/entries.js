@@ -19,13 +19,13 @@ function decryptEntries(raw) {
   return out;
 }
 
-// GET /api/entries -> all of this user's entries, decrypted
+
 router.get('/', requireAuth, async (req, res) => {
   const raw = await db.getEntries(req.userId);
   res.json({ entries: decryptEntries(raw) });
 });
 
-// PUT /api/entries/:date -> upsert one day's log
+
 router.put('/:date', requireAuth, async (req, res) => {
   const { date } = req.params;
   if (!DATE_RE.test(date)) return res.status(400).json({ error: 'date must be YYYY-MM-DD.' });
@@ -42,7 +42,7 @@ router.put('/:date', requireAuth, async (req, res) => {
   res.json({ entry: { flow: entry.flow, symptoms: entry.symptoms, note: note || '' } });
 });
 
-// GET /api/entries/predictions -> derived cycle stats
+
 router.get('/meta/predictions', requireAuth, async (req, res) => {
   const user = await db.getUser(req.userId);
   const raw = await db.getEntries(req.userId);

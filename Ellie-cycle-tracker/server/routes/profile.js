@@ -16,9 +16,7 @@ router.patch('/', requireAuth, async (req, res) => {
   res.json({ user: safe });
 });
 
-// Companions are people the user wants to keep a personal note of (e.g. a
-// partner or child) who don't necessarily have their own bloom account.
-// For account-to-account sharing, see routes/circle.js.
+
 router.get('/companions', requireAuth, async (req, res) => {
   const user = await db.getUser(req.userId);
   res.json({ companions: user.companions || [] });
